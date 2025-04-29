@@ -2,36 +2,38 @@ import { FaGithub, FaLinkedin, FaWhatsapp } from 'react-icons/fa';
 import { useState, useEffect } from 'preact/hooks';
 
 export default function Sidebar() {
-  const [activeSection, setActiveSection] = useState('about');
+  const [activeSection, setActiveSection] = useState<string>('li1');
+
+  const handleClick = (id: string) => (event: MouseEvent) => {
+    event.preventDefault();
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    setActiveSection(id);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
       const sections = ['li1', 'li2', 'li3', 'li4'];
-      let current = 'li1';
-      let minDistance = Number.POSITIVE_INFINITY;
+      let current = activeSection;
 
-      sections.forEach((id) => {
+      for (const id of sections) {
         const section = document.getElementById(id);
         if (section) {
           const rect = section.getBoundingClientRect();
-          if (rect.top >= 0 && rect.top < minDistance) {
-            minDistance = rect.top;
+          if (rect.top <= 100 && rect.bottom >= 100) {
             current = id;
+            break;
           }
         }
-      });
-
-      const scrollBottom = Math.ceil(window.innerHeight + window.scrollY) >= document.body.scrollHeight;
-      if (scrollBottom) {
-        current = 'projects';
       }
 
-      setActiveSection(current);
+      if (current !== activeSection) {
+        setActiveSection(current);
+      }
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [activeSection]);
 
   return (
     <aside className="sidebar" data-aos="fade-right">
@@ -39,15 +41,51 @@ export default function Sidebar() {
         <h1>Juan Camilo Muñoz</h1>
         <h2>Ingeniero Mecánico</h2>
         <ul className="nav-links">
-          <li><a href="#li1" className={activeSection === 'li1' ? 'active' : ''}>Acerca de</a></li>
-          <li><a href="#li2" className={activeSection === 'li2' ? 'active' : ''}>Experiencia</a></li>
-          <li><a href="#li3" className={activeSection === 'li3' ? 'active' : ''}>Estudios</a></li>
-          <li><a href="#li4" className={activeSection === 'li4' ? 'active' : ''}>Habilidades</a></li>
+          <li>
+            <a
+              href="#li1"
+              className={activeSection === 'li1' ? 'active' : ''}
+              onClick={handleClick('li1')}
+            >
+              Acerca de
+            </a>
+          </li>
+          <li>
+            <a
+              href="#li2"
+              className={activeSection === 'li2' ? 'active' : ''}
+              onClick={handleClick('li2')}
+            >
+              Experiencia
+            </a>
+          </li>
+          <li>
+            <a
+              href="#li3"
+              className={activeSection === 'li3' ? 'active' : ''}
+              onClick={handleClick('li3')}
+            >
+              Estudios
+            </a>
+          </li>
+          <li>
+            <a
+              href="#li4"
+              className={activeSection === 'li4' ? 'active' : ''}
+              onClick={handleClick('li4')}
+            >
+              Habilidades
+            </a>
+          </li>
         </ul>
       </div>
 
       <div className="social-icons">
-        <a href="https://www.linkedin.com/in/juan-camilo-mu%C3%B1oz-rodr%C3%ADguez-105a41275/" target="_blank" rel="noopener noreferrer">
+        <a
+          href="https://www.linkedin.com/in/juan-camilo-mu%C3%B1oz-rodr%C3%ADguez-105a41275/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <FaLinkedin size={22} />
         </a>
         <a href="https://wa.me/573154484804" target="_blank" rel="noopener noreferrer">
