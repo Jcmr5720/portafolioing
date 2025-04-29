@@ -6,34 +6,37 @@ export default function Sidebar() {
 
   const handleClick = (id: string) => (event: MouseEvent) => {
     event.preventDefault();
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-    setActiveSection(id);
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+      setActiveSection(id);
+    }
   };
 
   useEffect(() => {
     const handleScroll = () => {
       const sections = ['li1', 'li2', 'li3', 'li4'];
-      let current = activeSection;
+      let newActive = activeSection;
 
       for (const id of sections) {
         const section = document.getElementById(id);
         if (section) {
           const rect = section.getBoundingClientRect();
           if (rect.top <= 100 && rect.bottom >= 100) {
-            current = id;
+            newActive = id;
             break;
           }
         }
       }
 
-      if (current !== activeSection) {
-        setActiveSection(current);
+      if (newActive !== activeSection) {
+        setActiveSection(newActive);
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [activeSection]);
+  }, []); // ❗ Not including activeSection here avoids re-triggering
 
   return (
     <aside className="sidebar" data-aos="fade-right">
@@ -41,42 +44,20 @@ export default function Sidebar() {
         <h1>Juan Camilo Muñoz</h1>
         <h2>Ingeniero Mecánico</h2>
         <ul className="nav-links">
-          <li>
-            <a
-              href="#li1"
-              className={activeSection === 'li1' ? 'active' : ''}
-              onClick={handleClick('li1')}
-            >
-              Acerca de
-            </a>
-          </li>
-          <li>
-            <a
-              href="#li2"
-              className={activeSection === 'li2' ? 'active' : ''}
-              onClick={handleClick('li2')}
-            >
-              Experiencia
-            </a>
-          </li>
-          <li>
-            <a
-              href="#li3"
-              className={activeSection === 'li3' ? 'active' : ''}
-              onClick={handleClick('li3')}
-            >
-              Estudios
-            </a>
-          </li>
-          <li>
-            <a
-              href="#li4"
-              className={activeSection === 'li4' ? 'active' : ''}
-              onClick={handleClick('li4')}
-            >
-              Habilidades
-            </a>
-          </li>
+          {['li1', 'li2', 'li3', 'li4'].map((id, index) => {
+            const labels = ['Acerca de', 'Experiencia', 'Estudios', 'Habilidades'];
+            return (
+              <li key={id}>
+                <a
+                  href={`#${id}`}
+                  className={activeSection === id ? 'active' : ''}
+                  onClick={handleClick(id)}
+                >
+                  {labels[index]}
+                </a>
+              </li>
+            );
+          })}
         </ul>
       </div>
 
