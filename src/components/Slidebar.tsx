@@ -36,7 +36,7 @@ export default function Sidebar() {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []); // ❗ Not including activeSection here avoids re-triggering
+  }, []); 
 
   return (
     <aside className="sidebar" data-aos="fade-right">
@@ -63,7 +63,7 @@ export default function Sidebar() {
 
       <div className="social-icons">
         <a
-          href="https://www.linkedin.com/in/juan-camilo-mu%C3%B1oz-rodr%C3%ADguez-105a41275/"
+          href="https://www.linkedin.com/in/juancamilomunozr/"
           target="_blank"
           rel="noopener noreferrer"
         >
